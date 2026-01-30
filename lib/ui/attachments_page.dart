@@ -7,10 +7,12 @@ class AttachmentsPage extends StatelessWidget {
     super.key,
     required this.jobId,
     required this.repo,
+    this.onFirstFrame,
   });
 
   final String jobId;
   final AttachmentRepository repo;
+  final void Function()? onFirstFrame;
 
   Future<void> _pickAndAddAttachment(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles();
@@ -22,6 +24,9 @@ class AttachmentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onFirstFrame?.call();
+    });
     return Scaffold(
       appBar: AppBar(title: const Text('Attachments')),
       floatingActionButton: FloatingActionButton(
