@@ -21,17 +21,22 @@ class SyncService {
     required this.db,
     required this.baseUrl,
     required this.apiKey,
-  });
+    http.Client? httpClient,
+  }) : client = httpClient ?? http.Client();
 
   final AppDatabase db;
   final String baseUrl;
   final String apiKey;
+  final http.Client client;
 
   Future<SyncResult> runSync() async {
     final start = DateTime.now();
 
-    final pendingJobs = await (db.select(db.jobs)..where((t) => t.syncStatus.isNotValue('synced'))).get();
-    final pendingAttachments = await (db.select(db.attachments)..where((t) => t.syncStatus.equals('pending_upload'))).get();
+    final pendingJobs = 
+        await (db.select(db.jobs)..where((t) => t.syncStatus.isNotValue('synced'))).get();
+    
+    final pendingAttachments = 
+        await (db.select(db.attachments)..where((t) => t.syncStatus.equals('pending_upload'))).get();
 
     // ignore: avoid_print
     print('Sync start jobs=${pendingJobs.length} attachments=${pendingAttachments.length}');
@@ -52,7 +57,7 @@ class SyncService {
         }).toList()
       };
 
-      final res = await http.post(
+      final res = await client.post(
         Uri.parse('$baseUrl/api/v1/sync/jobs'),
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +107,7 @@ class SyncService {
         }).toList()
       };
 
-      final res = await http.post(
+      final res = await client.post(
         Uri.parse('$baseUrl/api/v1/sync/attachments'),
         headers: {
           'Content-Type': 'application/json',

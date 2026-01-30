@@ -61,6 +61,7 @@ class AuditLogs extends Table {
   tables: [Jobs, InspectionItems, Attachments, AuditLogs],
 )
 class AppDatabase extends _$AppDatabase {
+  AppDatabase.forTesting(QueryExecutor e) : super(e);
   AppDatabase() : super(_openConnection());
 
   @override
