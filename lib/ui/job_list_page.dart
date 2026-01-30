@@ -3,21 +3,45 @@ import 'package:ramp_check/data/repositories/job_repository.dart';
 import 'package:ramp_check/ui/add_job_page.dart';
 import 'package:ramp_check/data/repositories/attachment_repository.dart';
 import 'package:ramp_check/ui/attachments_page.dart';
+import 'package:ramp_check/sync/sync_service.dart';
 
 class JobListPage extends StatelessWidget {
   const JobListPage({
     super.key, 
     required this.jobRepo,
     required this.attachmentRepo,
+    required this.syncService,
   });
 
   final JobRepository jobRepo;
   final AttachmentRepository attachmentRepo;
-
+  final SyncService syncService;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('RampCheck Jobs')),
+      appBar: AppBar(
+        title: const Text('RampCheck Jobs'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync),
+            onPressed: () async {
+              final result = await syncService.runSync();
+
+              if (!context.mounted) return;
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Sync complete: jobs=${result.syncedJobs} attachments=${result.syncedAttachments} '
+                    '(${result.durationMs}ms)',
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
       body: StreamBuilder(
         stream: jobRepo.watchJobs(),
         builder: (context, snapshot) {
