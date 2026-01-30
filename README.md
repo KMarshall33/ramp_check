@@ -1,16 +1,33 @@
-# ramp_check
+# RampCheck
 
-A new Flutter project.
+RampCheck is a cross-platform Flutter app built for the Cross-Platform Programming module. It demonstrates an offline-first approach using Drift (SQLite) for local persistence, with manual and automatic synchronisation to a local Flask API when connectivity is available.
 
-## Getting Started
+## Key features
 
-This project is a starting point for a Flutter application.
+- Offline-first local persistence with Drift (SQLite)
+- CRUD for jobs and attachment metadata
+- Manual sync from the UI and auto sync when connectivity is restored
+- API key stored using secure storage
+- Unit tests using an in-memory Drift database and mocked HTTP client
 
-A few resources to get you started if this is your first Flutter project:
+## Run the app
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+From the project root:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Windows
+```
+flutter run -d windows
+```
+### Android emulator
+```
+flutter run -d emulator
+```
+
+Note: when using a local Flask API, Windows uses `http://127.0.0.1` and the Android emulator uses `http://10.0.2.2`.
+
+## Run tests
+
+From the project root:
+```
+flutter test
+```
