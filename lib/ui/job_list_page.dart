@@ -57,11 +57,18 @@ class JobListPage extends StatelessWidget {
                 trailing: IconButton(
                   icon: const Icon(Icons.attach_file),
                   onPressed: () async {
+                    final sw = Stopwatch()..start();
+
                     await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => AttachmentsPage(
                           jobId: j.id,
                           repo: attachmentRepo,
+                          onFirstFrame: () {
+                            sw.stop();
+                            // ignore: avoid_print
+                            print('UI timing: open_attachments_first_frame_ms=${sw.elapsedMilliseconds}');
+                            },
                         ),
                       ),
                     );
